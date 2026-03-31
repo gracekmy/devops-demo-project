@@ -4,11 +4,6 @@ pipeline {
     string(name: 'build_version', defaultValue: 'V1.0', description: 'Build version to use for Docker image')
   }
   stages {
-    stage('Checkout') {
-      steps {
-        git branch: 'main', url: 'https://github.com/abdelbaki-bouzaienne/devops-demo-project.git'
-      }
-    }
     stage('Build and Test') {
       steps {
         sh 'ls -ltr'
