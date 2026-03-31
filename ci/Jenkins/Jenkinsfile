@@ -42,7 +42,7 @@ pipeline {
     GIT_USER_NAME = "gracekmy"
   }
   steps {
-    withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+    withCredentials([usernamePassword(credentialsId: 'github2', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
       sh '''
         git config user.email "gracekivwila.m@gmail.com"
         git config user.name "Grace"
@@ -54,10 +54,10 @@ pipeline {
         git add helm/app/values.yaml
         git commit -m "Update deployment image to version ${build_version}" || echo "No changes to commit"
 
-        git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git" main
+        git push https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
       '''
     }
   }
-}   
+}  
   }
 }
