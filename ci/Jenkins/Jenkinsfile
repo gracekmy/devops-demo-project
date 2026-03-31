@@ -37,27 +37,28 @@ pipeline {
       }
     }
     stage('Update Deployment File') {
-    environment {
-        GIT_REPO_NAME = "devops-demo-project"
-        GIT_USER_NAME = "gracekmy"
+  environment {
+    GIT_REPO_NAME = "devops-demo-project"
+    GIT_USER_NAME = "gracekmy"
+  }
+  steps {
+    withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+      sh '''
+        git config user.email "gracekivwila.m@gmail.com"
+        git config user.name "Grace"
+
+        git checkout -B main origin/main
+
+        sed -i "s/tag: .*/tag: \\"${build_version}\\"/" helm/app/values.yaml
+
+        git add helm/app/values.yaml
+        git commit -m "Update deployment image to version ${build_version}" || echo "No changes to commit"
+
+        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git
+        git push origin HEAD:main
+      '''
     }
-    steps {
-        withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
-            sh '''
-                git config user.email "gracekivwila.m@gmail.com"
-                git config user.name "Grace"
-
-                git checkout -B main origin/main
-
-                sed -i "s/tag: .*/tag: \\"${build_version}\\"/" helm/app/values.yaml
-
-                git add helm/app/values.yaml
-                git commit -m "Update deployment image to version ${build_version}" || echo "No changes to commit"
-
-                git push https://x-access-token:${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
-            '''
-        }
-    }
+  }
 }
    
   }
