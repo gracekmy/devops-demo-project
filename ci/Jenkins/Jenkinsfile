@@ -44,19 +44,19 @@ pipeline {
   steps {
     withCredentials([usernamePassword(credentialsId: 'github2', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
       sh '''
-        git config user.email "gracekivwila.m@gmail.com"
-        git config user.name "Grace"
+  git config user.email "gracekivwila.m@gmail.com"
+  git config user.name "Grace"
 
-        git checkout -B main origin/main
+  git checkout -B main origin/main
 
-        sed -i 's/tag: .*/tag: "V1.0"/' helm/app/values.yaml
+  sed -i 's/tag: .*/tag: "V1.0"/' helm/app/values.yaml
 
-        git add helm/app/values.yaml
-        git commit -m "Update deployment image to version ${build_version}" || echo "No changes to commit"
+  git add helm/app/values.yaml
+  git commit -m "Update deployment image to version ${build_version}" || echo "No changes to commit"
 
-        AUTH=$(printf "%s:%s" "$GIT_USERNAME" "$GIT_TOKEN" | base64 | tr -d '\\n')
-        git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH" push https://github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
-      '''
+  AUTH=$(printf "%s:%s" "$GIT_USERNAME" "$GIT_TOKEN" | base64 | tr -d '\\n')
+  git -c http.extraheader="AUTHORIZATION: basic $AUTH" push https://github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
+'''
     }
   }
 }
