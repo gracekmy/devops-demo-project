@@ -55,7 +55,7 @@ pipeline {
   git commit -m "Update deployment image to version ${build_version}" || echo "No changes to commit"
 
   AUTH=$(printf "%s:%s" "$GIT_USERNAME" "$GIT_TOKEN" | base64 | tr -d '\\n')
-  git -c http.extraheader="AUTHORIZATION: basic $AUTH" push https://github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
+sh "git push https://${GIT_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main"
 '''
     }
   }
