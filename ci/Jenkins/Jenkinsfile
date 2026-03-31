@@ -54,10 +54,11 @@ pipeline {
         git add helm/app/values.yaml
         git commit -m "Update deployment image to version ${build_version}" || echo "No changes to commit"
 
-        git push https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
+        AUTH=$(printf "%s:%s" "$GIT_USERNAME" "$GIT_TOKEN" | base64 | tr -d '\\n')
+        git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH" push https://github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
       '''
     }
   }
-}  
+}
   }
 }
