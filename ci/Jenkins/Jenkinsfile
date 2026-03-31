@@ -49,17 +49,15 @@ pipeline {
 
         git checkout -B main origin/main
 
-        sed -i "s/tag: .*/tag: \\"${build_version}\\"/" helm/app/values.yaml
+        sed -i 's/tag: .*/tag: "V1.0"/' helm/app/values.yaml
 
         git add helm/app/values.yaml
         git commit -m "Update deployment image to version ${build_version}" || echo "No changes to commit"
 
-        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git
-        git push origin HEAD:main
+        git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git" main
       '''
     }
   }
-}
-   
+}   
   }
 }
