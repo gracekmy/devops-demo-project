@@ -51,10 +51,9 @@ pipeline {
                 git checkout -B main origin/main
                 
                 # Mise à jour du tag dans le fichier values.yaml
-                sed -i 's/tag: .*/tag: "V1.0"/' helm/app/values.yaml
-                
+                sed -i "s/tag: .*/tag: \"${build_version}\"/" helm/app/values.yaml   
                 git add helm/app/values.yaml
-                git commit -m "Update deployment image to version V1.0" || echo "No changes to commit"
+                git commit -m "Update deployment image to version ${build_version}" || echo "No changes to commit"
                 
                 # LE PUSH : Ne pas ajouter "sh" au début de cette ligne
                 git push https://${GIT_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
